@@ -139,7 +139,7 @@ public abstract class Graph {
 	 * @param v The starting vertex
 	 * @return A list of the vertices that can be reached in exactly two hops (by 
 	 * following two edges) from vertex v.
-	 * XXX: Implement in part 2 of week 1 for each subclass of Graph
+	 * Implement in part 2 of week 1 for each subclass of Graph
 	 */
 	public abstract List<Integer> getDistance2(int v); 
 
@@ -237,7 +237,7 @@ public abstract class Graph {
 
 	
 	public static void main (String[] args) {
-		GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
+		//GraphLoader.createIntersectionsFile("data/maps/myucsd.map", "data/intersections/myucsd.intersections");
 		
 
 		// For testing of Part 1 functionality
@@ -248,9 +248,13 @@ public abstract class Graph {
 		
 		System.out.println("****");
 		System.out.println("Roads / intersections:");
-		GraphAdjList graphFromFile = new GraphAdjList();
-		GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphFromFile);
-		System.out.println(graphFromFile);
+		GraphAdjList graphAdjList = new GraphAdjList();
+		GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphAdjList);
+		
+		GraphAdjMatrix graphAdjMatrix = new GraphAdjMatrix();
+		GraphLoader.loadRoadMap("data/testdata/simpletest.map", graphAdjMatrix);
+		
+		System.out.println(graphAdjList);
 		
 		System.out.println("Observe all degrees are <= 12.");
 		System.out.println("****");
@@ -270,8 +274,18 @@ public abstract class Graph {
 		// Test your distance2 code here.
 		System.out.println("Testing distance-two methods on sample graphs...");
 		System.out.println("Goal: implement method using two approaches.");
-
-
+		
+		System.out.println("AdjList:" + graphAdjList.getDistance2(0));
+		System.out.println("AdjMatrix:" + graphAdjMatrix.getDistance2(0));
+		
+		System.out.println("AdjList:" + graphAdjList.getDistance2(1));
+		System.out.println("AdjMatrix:" + graphAdjMatrix.getDistance2(1));
+		
+		System.out.println("AdjList:" + graphAdjList.getDistance2(2));
+		System.out.println("AdjMatrix:" + graphAdjMatrix.getDistance2(2));
+		
+		System.out.println("AdjList:" + graphAdjList.getDistance2(3));
+		System.out.println("AdjMatrix:" + graphAdjMatrix.getDistance2(3));
 		
 	}
 }

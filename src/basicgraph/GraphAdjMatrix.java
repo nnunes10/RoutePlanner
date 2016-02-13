@@ -105,7 +105,25 @@ public class GraphAdjMatrix extends Graph {
 	 * @return List<Integer> a list of indices of vertices.  
 	 */	
 	public List<Integer> getDistance2(int v) {
-		return null;
+		List<Integer> neighbors2Hops = new ArrayList<>();
+		
+		// matrix multiplication algorithm for row v
+		for(int j=0; j < getNumVertices(); j++){
+			int sum = 0;
+			
+			for(int k=0; k < getNumVertices(); k++){
+				sum += adjMatrix[v][k] * adjMatrix[k][j];
+			}
+			
+			if(sum > 0){
+				// to explore all possible paths
+				for(int i = 0; i < sum; i++){
+					neighbors2Hops.add(j);
+				}
+			}
+		}
+		
+		return neighbors2Hops;
 	}
 	
 	/**
