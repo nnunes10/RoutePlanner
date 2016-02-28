@@ -7,7 +7,10 @@
  */
 package roadgraph;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -137,13 +140,72 @@ public class MapGraph {
 	public List<GeographicPoint> bfs(GeographicPoint start, 
 			 					     GeographicPoint goal, Consumer<GeographicPoint> nodeSearched)
 	{
-		// TODO: Implement this method in WEEK 2
 		
-		// Hook for visualization.  See writeup.
-		//nodeSearched.accept(next.getLocation());
-
+		List<GeographicPoint> queue = new ArrayList<>();
+		Set<GeographicPoint> visitedNodes = new HashSet<>();
+		Map<GeographicPoint, GeographicPoint> parentNodes = new HashMap<>();
+		
+		// Initialize queue
+		queue.add(start);
+		visitedNodes.add(start);
+		
+		while(!queue.isEmpty()){
+			
+			GeographicPoint curr = queue.get(0);
+			// Hook for visualization.
+			nodeSearched.accept(curr);
+			queue.remove(0);
+			System.out.println("Current Node: " + curr);
+			
+			if((curr.getX() == goal.getX()) && (curr.getY() == goal.getY())){
+				System.out.println("Found Goal");
+				return processPath(start, goal, parentNodes);
+			}
+			
+			for(MapEdge edge : nodes.get(curr).getNeighbors()){
+				GeographicPoint endVertex = edge.getEndVertex();
+				
+				if(!visitedNodes.contains(endVertex)){
+					visitedNodes.add(endVertex);
+					queue.add(endVertex);
+					parentNodes.put(endVertex, curr);
+				}
+				
+			}
+			
+		}
+		
 		return null;
 	}
+	
+	/** Find the path from goal node to start node
+	 * 
+	 * @param start The starting location
+	 * @param goal The goal location
+	 * @param parentNodes
+	 * @return The list of nodes that form the path from
+	 *   start to goal (including both start and goal).
+	 */
+	private List<GeographicPoint> processPath(GeographicPoint start, GeographicPoint goal, Map<GeographicPoint, GeographicPoint> parentNodes){
+		
+		GeographicPoint current = goal;
+		GeographicPoint parent = parentNodes.get(current);
+		
+		List<GeographicPoint> path = new ArrayList<GeographicPoint>();
+		path.add(current);
+		path.add(parent);
+		
+		while(parent != start){
+			 current = parent;
+			 parent = parentNodes.get(current);
+			 path.add(parent);
+		}
+		
+		Collections.reverse(path);
+		
+		return path;
+	}
+
 	
 
 	/** Find the path from start to goal using Dijkstra's algorithm
@@ -211,6 +273,9 @@ public class MapGraph {
 		return null;
 	}
 	
+	/** Print the graph structure. Useful for debug.
+	 * 
+	 */
 	public void printGraph(){
 		for(GeographicPoint location : nodes.keySet()){
 			System.out.println(location.getX() + "," + location.getY() + " ->");
@@ -232,6 +297,10 @@ public class MapGraph {
 		System.out.println("Vertices = " + theMap.getNumVertices());
 		System.out.println("Edges = " + theMap.getNumEdges());
 		theMap.printGraph();
+		
+		
+		List<GeographicPoint> path = theMap.bfs(new GeographicPoint(5,1), new GeographicPoint(8,-1));
+		System.out.println(path);
 		
 		// You can use this method for testing.  
 		
